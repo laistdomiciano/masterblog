@@ -15,6 +15,7 @@ def save_blog_posts(posts):
     with open('blog_posts.json', 'w') as fileobj:
         json.dump(posts, fileobj)
 
+
 @app.route('/hello')
 def hello_world():
     return 'Hello, World! Here is Lais, your favourite coder!'
@@ -56,6 +57,19 @@ def add():
 
     return render_template('add.html')
 
+@app.route('/delete/<int:post_id>')
+def delete(post_id):
+    # Load existing blog posts
+    blog_posts = load_posts()
+
+    # Find the blog post with the given id and remove it from the list
+    blog_posts = [post for post in blog_posts if post['id'] != post_id]
+
+    # Save updated list to JSON file
+    save_blog_posts(blog_posts)
+
+    # Redirect back to the home page
+    return redirect(url_for('index'))
 
 if __name__ == '__main__':
     app.run()
